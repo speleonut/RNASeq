@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH -J mm2ont-cDNA-wdl-sub
-#SBATCH -o /fast/users/%u/launch/mm2ont-cDNA-wdl-sub-slurm-%j.out
+#SBATCH -o /fast/users/%u/log/mm2ont-cDNA-wdl-sub-slurm-%j.out
 #SBATCH -A robinson
 #SBATCH -p batch
 #SBATCH -N 1
@@ -148,6 +148,9 @@ echo "{
 
 ## Submit the workflow to the queue ##
 module load $modJava
+# Insert next line to work around strange error
+cp $scriptDir/cromwell_slurm.conf /tmp/slurmd/job${SLURM_JOB_ID}/cromwell_slurm.conf
+
 java -Dconfig.file=$scriptDir/cromwell_slurm.conf \
 -jar $cromwellPath/$cromwellJar \
 run $scriptDir/mm2.ONT.cDNA.wdl \
