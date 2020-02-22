@@ -22,7 +22,7 @@ modHTSlib="HTSlib/1.9-foss-2016b"
 # Hard coded paths
 cromwellPath="/data/neurogenetics/executables/cromwell/"
 cromwellJar="cromwell-48.jar"
-minimapProg="/data/neurogenetics/executables/minimap2-2.17_x64-linux/mimimap2"
+minimapProg="/data/neurogenetics/executables/minimap2-2.17_x64-linux/minimap2"
 genomeBuild="/data/neurogenetics/RefSeq/GATK/hg38/Homo_sapiens_assembly38.fasta"
 scriptDir=$(dirname "$0")
 
@@ -148,9 +148,6 @@ echo "{
 
 ## Submit the workflow to the queue ##
 module load $modJava
-# Insert next line to work around strange error
-cp $scriptDir/cromwell_slurm.conf /tmp/slurmd/job${SLURM_JOB_ID}/cromwell_slurm.conf
-
 java -Dconfig.file=$scriptDir/cromwell_slurm.conf \
 -jar $cromwellPath/$cromwellJar \
 run $scriptDir/mm2.ONT.cDNA.wdl \
