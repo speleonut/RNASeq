@@ -148,7 +148,7 @@ echo "{
 
 ## Submit the workflow to the queue ##
 module load $modJava
-sbatch java -Dconfig.file=$scriptDir/cromwell_slurm.conf \
+java -Dconfig.file=$scriptDir/cromwell_slurm.conf \
 -jar $cromwellPath/$cromwellJar \
 run $scriptDir/mm2.ONT.cDNA.wdl \
 --inputs $workDir/$sampleName.inputs.json
