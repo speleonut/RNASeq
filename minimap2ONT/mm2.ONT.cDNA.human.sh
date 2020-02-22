@@ -132,17 +132,17 @@ echo "## INFO: Using $ID for the sequence ID"
 # Build the input .json file
 cd $workDir
 echo "{
-  "minimap2_ONT_cDNA.mimimap2.samtools": "$modSAMtools",
-  "minimap2_ONT_cDNA.mimimap2.platform": "ONT",
-  "minimap2_ONT_cDNA.mimimap2.htslib": "$modHTSlib",
-  "minimap2_ONT_cDNA.mimimap2.cDNAfastq": "$seqPath/$seqFile",
-  "minimap2_ONT_cDNA.mimimap2.program": "$minimapProg",
-  "minimap2_ONT_cDNA.mimimap2.cores": "8",
-  "minimap2_ONT_cDNA.mimimap2.library": "$LB",
-  "minimap2_ONT_cDNA.mimimap2.sampleName": "$sampleName",
-  "minimap2_ONT_cDNA.mimimap2.refSeq": "$genomeBuild",
-  "minimap2_ONT_cDNA.mimimap2.outputDir": "$workDir",
-  "minimap2_ONT_cDNA.mimimap2.readGroupID": "$ID"
+  \"minimap2_ONT_cDNA.mimimap2.samtools\": \"$modSAMtools\",
+  \"minimap2_ONT_cDNA.mimimap2.platform\": \"ONT\",
+  \"minimap2_ONT_cDNA.mimimap2.htslib\": \"$modHTSlib\",
+  \"minimap2_ONT_cDNA.mimimap2.cDNAfastq\": \"$seqFile\",
+  \"minimap2_ONT_cDNA.mimimap2.program\": \"$minimapProg\",
+  \"minimap2_ONT_cDNA.mimimap2.cores\": \"8\",
+  \"minimap2_ONT_cDNA.mimimap2.library\": \"$LB\",
+  \"minimap2_ONT_cDNA.mimimap2.sampleName\": \"$sampleName\",
+  \"minimap2_ONT_cDNA.mimimap2.refSeq\": \"$genomeBuild\",
+  \"minimap2_ONT_cDNA.mimimap2.outputDir\": \"$workDir\",
+  \"minimap2_ONT_cDNA.mimimap2.readGroupID\": \"$ID\"
 }
 " > $workDir/$sampleName.inputs.json
 
