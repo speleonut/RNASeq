@@ -19,7 +19,7 @@ modSAMtools="SAMtools/1.9-foss-2016b"
 modHTSlib="HTSlib/1.9-foss-2016b"
 
 # Hard coded paths
-minimapProg="/data/neurogenetics/executables/minimap2-2.17_x64-linux/mimimap2"
+minimapProg="/data/neurogenetics/executables/minimap2-2.17_x64-linux/minimap2"
 genomeBuild="/data/neurogenetics/RefSeq/GATK/hg38/Homo_sapiens_assembly38.fasta"
 scriptDir=$(dirname "$0")
 
