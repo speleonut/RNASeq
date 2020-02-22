@@ -148,7 +148,6 @@ module load $modSAMtools
 module load $modHTSlib
 ${minimapProg} -ax splice \
 -R "@RG\\tID:${ID}\\tLB:${LB}\\tPL:ONT\\tSM:${sampleName}" \
--t ${cores} \
-${genomeBuild} ${seqFile} |\
+-t 8 ${genomeBuild} ${seqFile} |\
 samtools view -bT ${genomeBuild} - |\
 samtools sort -l 5 -m 4G -@${cores} -T${sampleName} -o ${workDir}/${sampleName}.sort.bam -
