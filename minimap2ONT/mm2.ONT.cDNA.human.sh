@@ -20,11 +20,11 @@ modSAMtools="SAMtools/1.9-foss-2016b"
 modHTSlib="HTSlib/1.9-foss-2016b"
 
 # Hard coded paths
-cromwellPath="/data/neurogenetics/executables/cromwell/"
+cromwellPath="/data/neurogenetics/executables/cromwell"
 cromwellJar="cromwell-48.jar"
 minimapProg="/data/neurogenetics/executables/minimap2-2.17_x64-linux/minimap2"
 genomeBuild="/data/neurogenetics/RefSeq/GATK/hg38/Homo_sapiens_assembly38.fasta"
-scriptDir=$(dirname "$0")
+scriptDir="/data/neurogenetics/git/PhoenixScripts/mark/RNASeq/minimap2ONT"
 
 usage()
 {
