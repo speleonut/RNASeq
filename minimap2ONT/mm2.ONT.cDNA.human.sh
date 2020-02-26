@@ -82,7 +82,7 @@ if [ -z "$seqPath" ]; then # If path to sequences not specified then do not proc
 	echo "## ERROR: You need to specify the path to your fastq_pass folder"
 	exit 1
 fi
-if [ ! -d $seqPath/fastq_pass]; then # If the fastq_pass directory does not exist then do not proceed
+if [ ! -d $seqPath/fastq_pass ]; then # If the fastq_pass directory does not exist then do not proceed
     usage
     echo "## ERROR: The fastq_pass directory needs to be in $seqPath"
 	exit 1
