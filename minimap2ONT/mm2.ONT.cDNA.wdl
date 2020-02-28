@@ -26,7 +26,7 @@ task mimimap2 {
     }
     output {
         File sortedBAM = "${outputDir}/${sampleName}.sort.bam"
-        File sortedBAM = "${outputDir}/${sampleName}.sort.bam.bai"
+        File sortedBAI = "${outputDir}/${sampleName}.sort.bam.bai"
     }
     runtime {
         job_title: "mm2ont-cDNA"
