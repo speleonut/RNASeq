@@ -118,10 +118,16 @@ if [ -z "$LB" ]; then # If library not specified try to make a specfic one or us
 fi
 echo "## INFO: Using $LB for library name"
 
-# Collate sequence files.
-cd $seqPath/fastq_pass
+# Collate sequence files if not already done.
 # You could just scatter each file as an array job to an alignment but potentially this will be slower by loading up the queue
-cat *.gz > ../$sampleName.fastq.gz 
+if [ ! -f $seqPath/$sampleName.fastq.gz ]; then
+    cd $seqPath/fastq_pass
+    cat *.gz > ../$sampleName.fastq.gz
+else
+    echo "## WARN: A fastq file $seqPath/$sampleName.fastq.gz already exists so I'm going to use it.  
+	               If this isn't what you wanted you'll need to remove or move this file before you run this workflow again."
+fi
+
 seqFile=$seqPath/$sampleName.fastq.gz
 
 if [ -z $readGroupID ]; then # If no readGroupID then fetch from the .fastq file
@@ -138,7 +144,7 @@ echo "{
   \"minimap2_ONT_cDNA.mimimap2.seqFile\": \"$seqFile\",
   \"minimap2_ONT_cDNA.mimimap2.program\": \"$minimapProg\",
   \"minimap2_ONT_cDNA.mimimap2.cores\": \"8\",
-  \"minimap2_ONT_cDNA.mimimap2.library\": \"$LB\",
+  \"minimap2_ONT_cDNA.mimimap2.LB\": \"$LB\",
   \"minimap2_ONT_cDNA.mimimap2.sampleName\": \"$sampleName\",
   \"minimap2_ONT_cDNA.mimimap2.genomeBuild\": \"$genomeBuild\",
   \"minimap2_ONT_cDNA.mimimap2.outputDir\": \"$outputDir\",
