@@ -19,7 +19,7 @@ task mimimap2 {
         ${program} -ax splice \
         -R "@RG\\tID:${readGroupID}\\tLB:${LB}\\tPL:${platform}\\tSM:${sampleName}" \
         -t ${cores} \
-        ${refSeq} ${seqFile} |\
+        ${genomeBuild} ${seqFile} |\
         samtools view -bT ${genomeBuild} - |\
         samtools sort -l 5 -m 4G -@${cores} -T${sampleName} -o ${outputDir}/${sampleName}.sort.bam -
         samtools index ${outputDir}/${sampleName}.sort.bam
