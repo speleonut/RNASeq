@@ -6,7 +6,7 @@
 #SBATCH -p batch
 #SBATCH -N 1
 #SBATCH -n 8
-#SBATCH --time=15:00:00
+#SBATCH --time=05:00:00
 #SBATCH --mem=32GB
 
 # Notification configuration 
@@ -21,7 +21,6 @@ modHTSlib="HTSlib/1.9-foss-2016b"
 # Hard coded paths
 minimapProg="/data/neurogenetics/executables/minimap2-2.17_x64-linux/minimap2"
 genomeBuild="/data/neurogenetics/RefSeq/GATK/hg38/Homo_sapiens_assembly38.fasta"
-scriptDir=$(dirname "$0")
 
 usage()
 {
@@ -128,20 +127,6 @@ echo "## INFO: Using $ID for the sequence ID"
 
 # Build the input .json file
 cd $workDir
-echo "{
-  \"minimap2_ONT_cDNA.mimimap2.samtools\": \"$modSAMtools\",
-  \"minimap2_ONT_cDNA.mimimap2.platform\": \"ONT\",
-  \"minimap2_ONT_cDNA.mimimap2.htslib\": \"$modHTSlib\",
-  \"minimap2_ONT_cDNA.mimimap2.cDNAfastq\": \"$seqFile\",
-  \"minimap2_ONT_cDNA.mimimap2.program\": \"$minimapProg\",
-  \"minimap2_ONT_cDNA.mimimap2.cores\": \"8\",
-  \"minimap2_ONT_cDNA.mimimap2.library\": \"$LB\",
-  \"minimap2_ONT_cDNA.mimimap2.sampleName\": \"$sampleName\",
-  \"minimap2_ONT_cDNA.mimimap2.refSeq\": \"$genomeBuild\",
-  \"minimap2_ONT_cDNA.mimimap2.outputDir\": \"$workDir\",
-  \"minimap2_ONT_cDNA.mimimap2.readGroupID\": \"$ID\"
-}
-" > $workDir/$sampleName.inputs.json
 
 ## Run the script ##
 module load $modSAMtools
@@ -151,3 +136,4 @@ ${minimapProg} -ax splice \
 -t 8 ${genomeBuild} ${seqFile} |\
 samtools view -bT ${genomeBuild} - |\
 samtools sort -l 5 -m 4G -@${cores} -T${sampleName} -o ${workDir}/${sampleName}.sort.bam -
+samtools index ${workDir}/${sampleName}.sort.bam
