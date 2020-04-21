@@ -83,7 +83,7 @@ if [ -z "$OutDir" ]; then #If output directory not specified then run in default
 	echo "INFO: Using $OutDir as the output directory"
 fi
 
-if [ ! -d $OutDir ]; then
+if [ ! -d "$OutDir" ]; then
 		mkdir -p $OutDir
 fi
 
@@ -93,7 +93,7 @@ if [ -z "$gtfList" ]; then #If a gtf file list text file is not supplied then tr
 		gtfList=$OutDir/tmp.gtfList.txt
 	else
 	    find $DefaultOutDir/*/*.stringtie.run1.gtf > $OutDir/tmp.gtfList.txt
-	    if [ -s $OutDir/tmp.gtfList.txt ]; then
+	    if [ -s "$OutDir/tmp.gtfList.txt" ]; then
 	    	gtfList=$OutDir/tmp.gtfList.txt
 	    else
             usage
@@ -110,4 +110,3 @@ module load StringTie/1.3.3-foss-2017a
 stringtie --merge -p8 -G $HISAT2_INDEXES/$refSeq/$refSeq.gff \
 -o $OutDir/$gtfPrefix \
 $gtfList
-

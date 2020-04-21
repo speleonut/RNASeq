@@ -82,7 +82,7 @@ if [ -z "$seqPath" ]; then # If path to sequences not specified then do not proc
 	echo "## ERROR: You need to specify the path to your fastq_pass folder"
 	exit 1
 fi
-if [ ! -d $seqPath/fastq_pass ]; then # If the fastq_pass directory does not exist then do not proceed
+if [ ! -d "$seqPath/fastq_pass" ]; then # If the fastq_pass directory does not exist then do not proceed
     usage
     echo "## ERROR: The fastq_pass directory needs to be in $seqPath"
 	exit 1
@@ -105,7 +105,7 @@ if [ -z "$outputDir" ]; then # If no output directory then use default directory
 	outputDir=$FASTDIR/ONT/cDNA/$sampleName
 	echo "## INFO: Using $FASTDIR/ONT/cDNA/$sampleName as the output directory"
 fi
-if [ ! -d $outputDir ]; then
+if [ ! -d "$outputDir" ]; then
 	mkdir -p $outputDir
 fi
 if [ -z "$LB" ]; then # If library not specified try to make a specfic one or use "SQK-DCS109" as default
@@ -120,7 +120,7 @@ echo "## INFO: Using $LB for library name"
 
 # Collate sequence files if not already done.
 # You could just scatter each file as an array job to an alignment but potentially this will be slower by loading up the queue
-if [ ! -f $seqPath/$sampleName.fastq.gz ]; then
+if [ ! -f "$seqPath/$sampleName.fastq.gz" ]; then
     cd $seqPath/fastq_pass
     cat *.gz > ../$sampleName.fastq.gz
 else
@@ -130,7 +130,7 @@ fi
 
 seqFile=$seqPath/$sampleName.fastq.gz
 
-if [ -z $readGroupID ]; then # If no readGroupID then fetch from the .fastq file
+if [ -z "$readGroupID" ]; then # If no readGroupID then fetch from the .fastq file
 	readGroupID=$(zcat $seqFile | head -n 1 | tr " " "\n" | grep runid | cut -f2 -d"=")
 fi
 echo "## INFO: Using $readGroupID for the sequence ID"

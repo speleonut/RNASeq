@@ -78,11 +78,11 @@ if [ -z "$OutDir" ]; then #If output directory not specified then run in current
 	echo "Using $OutDir as the working directory"
 fi
 
-if [ ! -d $OutDir ]; then
+if [ ! -d "$OutDir" ]; then
 		mkdir -p $OutDir
 fi
 
-if [ ! -d $OutDir/logs ]; then
+if [ ! -d "$OutDir/logs" ]; then
 		mkdir -p $OutDir/logs
 fi
 
@@ -96,7 +96,7 @@ module load SAMtools/1.3.1-foss-2016b
 module load StringTie/1.3.3-foss-2017a
 
 # Run HISAT2
-if [ -d $OutDir/${sampleID[$SLURM_ARRAY_TASK_ID]} ]; then
+if [ -d "$OutDir/${sampleID[$SLURM_ARRAY_TASK_ID]}" ]; then
     rm -r $OutDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/*
     echo "INFO: Contents of $OutDir/${sampleID[$SLURM_ARRAY_TASK_ID]} cleared!"
 else
@@ -117,4 +117,3 @@ stringtie $OutDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK
 -o $OutDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.stringtie.run1.gtf \
 -A $OutDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.stringtie.run1.gene_abund.txt \
 -C $OutDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.stringtie.run1.cov_refs.gtf \
-

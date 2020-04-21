@@ -71,12 +71,12 @@ if [ -z "$OutDir" ]; then # If output directory not specified then use the defau
 	echo "Using $OutDir as the working directory"
 fi
 
-if [ ! -d $OutDir ]; then
+if [ ! -d "$OutDir" ]; then
 		mkdir -p $OutDir
 fi
 
 if [ -z "$mergedGTF" ]; then # If merged gtf not specified then try to find it
-    if [ -s $OutDir/mergedOutput.gtf ]; then
+    if [ -s "$OutDir/mergedOutput.gtf" ]; then
     	mergedGTF=$OutDir/mergedOutput.gtf
     else
     	usage
@@ -96,4 +96,3 @@ stringtie $OutDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK
 -o $OutDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.stringtie.forBallgown.gtf \
 -A $OutDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.stringtie.run2.gene_abund.txt \
 -C $OutDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.stringtie.run2.cov_refs.gtf \
-

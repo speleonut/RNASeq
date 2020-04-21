@@ -4,9 +4,9 @@ workflow minimap2_ONT_cDNA {
 task mimimap2 {
     String htslib
     String samtools
-    File program
-    File genomeBuild
-    File seqFile
+    String program
+    String genomeBuild
+    String seqFile
     String readGroupID
     String sampleName
     String platform
