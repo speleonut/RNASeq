@@ -21,28 +21,34 @@ modHTSlib="HTSlib/1.9-foss-2016b"
 # Hard coded paths
 minimapProg="/data/neurogenetics/executables/minimap2-2.17_x64-linux/minimap2"
 genomeBuild="/data/neurogenetics/RefSeq/GATK/hg38/Homo_sapiens_assembly38.fasta"
+barcodes=false
 
 usage()
 {
 echo "# Script for mapping Oxford Nanopore cDNA reads to the human genome.
-# This script coordinates submission of the mm2.ONT.cDNA.wdl workflow to phoenix.  The script sets up all of the required inputs using the information 
+# This script coordinates submission of an array job to map cDNA using minimap2 to phoenix.  The script sets up all of the required inputs using the information 
 # submitted via the flags below or default options provided.
-# REQUIREMENTS: As a minimum you need the fastq_pass folder and the final_summary_xxx.txt file from your nanopore run.
+# REQUIREMENTS: As a minimum you need the fastq_pass folder and the final_summary_xxx.txt file from your nanopore run.  If you used barcodes you must specify the -b flag
+# and you should provide a tab delimited file called barcodes.txt with the barcode and the sample name as the two columns.
 #
-# Usage sbatch $0 -s /path/to/sequences -o /path/to/output -c /path/to/config.cfg -S SAMPLE -L LIBRARY -I ID] | [ - h | --help ]
+# Usage (no barcodes) sbatch $0 -s /path/to/sequences -o /path/to/output -S SAMPLE -L LIBRARY -I ID] | [ - h | --help ]
+# Usage (with barcodes) sbatch --array 0-(n-1 barcodes) $0 -s /path/to/sequences -b -o /path/to/output -S SAMPLE -L LIBRARY -I ID] | [ - h | --help ]
 #
 # Options
 # -s	REQUIRED. Path to the folder containing the fastq_pass folder.  Your final_summary_xxx.txt must be in this folder.
-# -S	OPTIONAL (with caveats). Sample name which will go into the BAM header. If not specified, then it will be fetched 
-#       from the final_summary_xxx.txt file.
-# -o	OPTIONAL. Path to where you want to find your file output (if not specified an output directory $FASTDIR/ONT/cDNA/\$sampleName is used)
-# -L	OPTIONAL. Identifier for the sequence library (to go into the @RG line, eg. MySeqProject20200202-PalindromicDatesRule). 
-#                 Default \"SQK-DCS109_\$protocol_group_id\"
+# -b    DEPENDS.  If you used barcodes set the -b flag.  If you want meaningful sample ID add a file called barcodes.txt to the sequence folder with the 
+#                 tab delimited barcode and ID on each line.
+# -S	OPTIONAL. (with caveats). Sample name which will go into the BAM header. If not specified, then it will be fetched.
+#                 from the final_summary_xxx.txt file.
+# -o	OPTIONAL. Path to where you want to find your file output (if not specified an output directory $FASTDIR/ONT/cDNA/\$sampleName is used).
+# -L	OPTIONAL. Identifier for the sequence library (to go into the @RG line, eg. MySeqProject20200202-PalindromicDatesRule).
+#                 Default \"SQK-DCS109_\$protocol_group_id\".
 # -I	OPTIONAL. Unique ID for the sequence (to go into the @RG line). If not specified the script will make one up.
 # -h or --help	Prints this message.  Or if you got one of the options above wrong you'll be reading this too!
 # 
 # Original: Written by Mark Corbett, 21/02/2020
 # Modified: (Date; Name; Description)
+# 23/07/2020; Mark; Added in barcode and array job option.
 #
 "
 }
@@ -52,6 +58,9 @@ while [ "$1" != "" ]; do
 	case $1 in
 		-s )			shift
 					seqPath=$1
+					;;
+		-b )			shift
+					barcodes=true
 					;;
 		-S )			shift
 					sampleName=$1
@@ -86,7 +95,18 @@ fi
 
 # Assume final_summary file exists for now
 finalSummaryFile=$(find $seqPath/final_summary_*)
-
+if "$barcodes"; then
+    if [ -f "$seqPath/barcodes.txt"]; then
+        echo "## INFO: Found barcodes.txt file"
+		BC=($(cut -f1 $seqPath/barcodes.txt))
+		sampleName=($(cut -f2 $seqPath/barcodes.txt))
+	else
+	    BC=($(ls $seqPath/fasq_pass/bar*))
+		sampleName=($(ls $seqPath/fasq_pass/bar*))
+		echo "## INFO: Using generic barcodes as sample names (suggest to supply a barcodes.txt file in future)."
+	fi
+fi
+        
 if [ -z "$sampleName" ]; then # If sample name not specified then look for the final_summary_xxx.txt file or die
 	if [ -f "$finalSummaryFile" ]; then
 		sampleName=$(grep sample_id $finalSummaryFile | cut -f2 -d"=")
@@ -98,8 +118,8 @@ if [ -z "$sampleName" ]; then # If sample name not specified then look for the f
 	fi
 fi
 if [ -z "$workDir" ]; then # If no output directory then use default directory
-	workDir=$FASTDIR/ONT/cDNA/$sampleName
-	echo "## INFO: Using $FASTDIR/ONT/cDNA/$sampleName as the output directory"
+	workDir=$FASTDIR/ONT/cDNA/${sampleName[$SLURM_ARRAY_TASK_ID]}
+	echo "## INFO: Using $FASTDIR/ONT/cDNA/${sampleName[$SLURM_ARRAY_TASK_ID]} as the output directory"
 fi
 if [ ! -d "$workDir" ]; then
 	mkdir -p $workDir
@@ -116,18 +136,16 @@ echo "## INFO: Using $LB for library name"
 
 # Collate sequence files if not already done.
 # You could just scatter each file as an array job to an alignment but potentially this will be slower by loading up the queue
-if [ ! -f "$seqPath/$sampleName.fastq.gz" ]; then
-    cd $seqPath/fastq_pass
-    cat *.gz > ../$sampleName.fastq.gz
+if [ ! -f "$seqPath/${BC[$SLURM_ARRAY_TASK_ID]}/${sampleName[$SLURM_ARRAY_TASK_ID]}.fastq.gz" ]; then
+    cd $seqPath/fastq_pass/${BC[$SLURM_ARRAY_TASK_ID]}
+    cat *.gz > $seqPath/${sampleName[$SLURM_ARRAY_TASK_ID]}.fastq.gz
 else
-    echo "## WARN: A fastq file $seqPath/$sampleName.fastq.gz already exists so I'm going to use it.  
+    echo "## WARN: A fastq file $seqPath/${sampleName[$SLURM_ARRAY_TASK_ID]}.fastq.gz already exists so I'm going to use it.  
 	               If this isn't what you wanted you'll need to remove or move this file before you run this workflow again."
 fi
 
-seqFile=$seqPath/$sampleName.fastq.gz
-
 if [ -z "$ID" ]; then # If no ID then fetch from the .fastq file
-	ID=$(zcat $seqFile | head -n 1 | tr " " "\n" | grep runid | cut -f2 -d"=")
+	ID=$(zcat $seqPath/${sampleName[$SLURM_ARRAY_TASK_ID]}.fastq.gz | head -n 1 | tr " " "\n" | grep runid | cut -f2 -d"=")
 fi
 echo "## INFO: Using $ID for the sequence ID"
 
@@ -138,8 +156,8 @@ cd $workDir
 module load $modSAMtools
 module load $modHTSlib
 ${minimapProg} -ax splice \
--R "@RG\\tID:${ID}\\tLB:${LB}\\tPL:ONT\\tSM:${sampleName}" \
--t 8 ${genomeBuild} ${seqFile} |\
+-R "@RG\\tID:${ID}\\tLB:${LB}\\tPL:ONT\\tSM:${sampleName[$SLURM_ARRAY_TASK_ID]}" \
+-t 8 ${genomeBuild} $seqPath/${sampleName[$SLURM_ARRAY_TASK_ID]}.fastq.gz |\
 samtools view -bT ${genomeBuild} - |\
-samtools sort -l 5 -m 4G -@${cores} -T${sampleName} -o ${workDir}/${sampleName}.sort.bam -
-samtools index ${workDir}/${sampleName}.sort.bam
+samtools sort -l 5 -m 4G -@${cores} -T${sampleName[$SLURM_ARRAY_TASK_ID]} -o ${workDir}/${sampleName[$SLURM_ARRAY_TASK_ID]}.sort.bam -
+samtools index ${workDir}/${sampleName[$SLURM_ARRAY_TASK_ID]}.sort.bam
