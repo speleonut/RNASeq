@@ -22,6 +22,7 @@ modHTSlib="HTSlib/1.9-foss-2016b"
 minimapProg="/data/neurogenetics/executables/minimap2-2.17_x64-linux/minimap2"
 genomeBuild="/data/neurogenetics/RefSeq/GATK/hg38/Homo_sapiens_assembly38.fasta"
 barcodes=false
+cores=8
 
 usage()
 {
@@ -107,7 +108,7 @@ if "$barcodes"; then
 	fi
 fi
         
-if [ -z "$sampleName" ]; then # If sample name not specified then look for the final_summary_xxx.txt file or die
+if [ -z "${sampleName[$SLURM_ARRAY_TASK_ID]}" ]; then # If sample name not specified then look for the final_summary_xxx.txt file or die
 	if [ -f "$finalSummaryFile" ]; then
 		sampleName=$(grep sample_id $finalSummaryFile | cut -f2 -d"=")
 		echo "## INFO: Using sample name $sampleName from $finalSummaryFile"
