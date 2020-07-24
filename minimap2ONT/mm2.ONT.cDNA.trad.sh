@@ -97,13 +97,13 @@ fi
 # Assume final_summary file exists for now
 finalSummaryFile=$(find $seqPath/final_summary_*)
 if "$barcodes"; then
-    if [ -f "$seqPath/barcodes.txt"]; then
+    if [ -f "$seqPath/barcodes.txt" ]; then
         echo "## INFO: Found barcodes.txt file"
 		BC=($(cut -f1 $seqPath/barcodes.txt))
 		sampleName=($(cut -f2 $seqPath/barcodes.txt))
 	else
-	    BC=($(ls $seqPath/fasq_pass/bar*))
-		sampleName=($(ls $seqPath/fasq_pass/bar*))
+	    BC=($(ls $seqPath/fastq_pass/bar*))
+		sampleName=($(ls $seqPath/fastq_pass/bar*))
 		echo "## INFO: Using generic barcodes as sample names (suggest to supply a barcodes.txt file in future)."
 	fi
 fi
