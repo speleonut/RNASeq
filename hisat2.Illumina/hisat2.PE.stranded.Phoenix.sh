@@ -85,11 +85,11 @@ if [ -z "$outDir" ]; then #If output directory not specified then run in current
 fi
 
 if [ ! -d "$outDir" ]; then
-		mkdir -p $outDir
+    mkdir -p $outDir
 fi
 
 if [ ! -d "$outDir/logs" ]; then
-		mkdir -p $outDir/logs
+    mkdir -p $outDir/logs
 fi
 
 # Define files for the array
@@ -111,15 +111,14 @@ ${hisat2Path}/hisat2 -x $HISAT2_INDEXES/$refSeq/$refSeq \
 -1 $(grep ${sampleID[$SLURM_ARRAY_TASK_ID]} $SeqFile | awk -F" " '{print $2}') \
 -2 $(grep ${sampleID[$SLURM_ARRAY_TASK_ID]} $SeqFile | awk -F" " '{print $3}') \
 --novel-splicesite-outfile $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.novel.ss.txt \
---dta --rf -p 8 \
+--dta --fr -p 8 \
 --new-summary \
 | samtools view -b - | samtools sort -@ 8 -o $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.hisat2.bam
 samtools index $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.hisat2.bam
 
 # Run first round of StringTie
 $stringtiePath/stringtie $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.hisat2.bam \
--G $HISAT2_INDEXES/$refSeq/$refSeq.gff -p 8 --rf \
+-G $HISAT2_INDEXES/$refSeq/$refSeq.gff -p 8 --fr \
 -o $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.stringtie.run1.gtf \
 -A $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.stringtie.run1.gene_abund.txt \
 -C $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.stringtie.run1.cov_refs.gtf \
-
