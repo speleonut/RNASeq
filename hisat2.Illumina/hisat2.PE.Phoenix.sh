@@ -99,6 +99,7 @@ sampleID=($(awk -F" " '{print $1}' $SeqFile))
 module load GCC
 module load HTSlib
 module load SAMtools
+module load Python/3.7.0
 
 # Run HISAT2
 if [ -d "$outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}" ]; then
