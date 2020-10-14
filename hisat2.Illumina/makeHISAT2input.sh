@@ -44,7 +44,7 @@ while read i; do
 	rm R1.tmp.txt R2.tmp.txt
 done < $currentDir/tmp.30r4kjfdbit9givids8o093jd.SampleNames.txt
 
-paste $1 R1.tmp.list.txt R2.tmp.list.txt > $currentDir/RNAList.txt
+paste $currentDir/tmp.30r4kjfdbit9givids8o093jd.SampleNames.txt R1.tmp.list.txt R2.tmp.list.txt > $currentDir/RNAList.txt
 rm R1.tmp.list.txt R2.tmp.list.txt $currentDir/tmp.30r4kjfdbit9givids8o093jd.SampleNames.txt
 
 cd $currentDir
