@@ -98,4 +98,4 @@ $stringtiePath/stringtie $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$S
 -e -B -G $mergedGTF -p 8 \
 -o $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.stringtie.forBallgown.gtf \
 -A $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.stringtie.run2.gene_abund.txt \
--C $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.stringtie.run2.cov_refs.gtf \
+-C $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.stringtie.run2.cov_refs.gtf

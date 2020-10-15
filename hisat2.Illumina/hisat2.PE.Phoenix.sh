@@ -122,4 +122,4 @@ ${stringtiePath}/stringtie $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[
 -G $HISAT2_INDEXES/$refSeq/$refSeq.gff -p 8 \
 -o $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.stringtie.run1.gtf \
 -A $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.stringtie.run1.gene_abund.txt \
--C $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.stringtie.run1.cov_refs.gtf \
+-C $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.stringtie.run1.cov_refs.gtf
