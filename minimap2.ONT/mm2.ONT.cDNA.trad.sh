@@ -5,9 +5,9 @@
 #SBATCH -A robinson
 #SBATCH -p batch
 #SBATCH -N 1
-#SBATCH -n 8
+#SBATCH -n 9
 #SBATCH --time=05:00:00
-#SBATCH --mem=32GB
+#SBATCH --mem=36GB
 
 # Notification configuration 
 #SBATCH --mail-type=END                                         
@@ -157,7 +157,7 @@ echo "## INFO: Using $ID for the sequence ID"
 cd $workDir
 
 ## Run the script ##
-modul load $modArch
+module load $modArch
 module load $modSAMtools
 module load $modHTSlib
 ${minimapProg} -ax splice \
