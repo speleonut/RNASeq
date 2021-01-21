@@ -30,7 +30,7 @@ task mimimap2 {
     }
     runtime {
         job_title: "mm2ont-cDNA"
-        slurm_out: "/fast/users/%u/log/mm2ont-cDNA-slurm-%j.out"
+        slurm_out: "/hpcfs/users/%u/log/mm2ont-cDNA-slurm-%j.out"
         nodes: "1"
         cores: "9"
         queue: "batch"

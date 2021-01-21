@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH -J mm2ont-cDNA
-#SBATCH -o /fast/users/%u/log/mm2ont-cDNA-slurm-%j.out
+#SBATCH -o /hpcfs/users/%u/log/mm2ont-cDNA-slurm-%j.out
 #SBATCH -A robinson
 #SBATCH -p batch
 #SBATCH -N 1
@@ -15,12 +15,14 @@
 #SBATCH --mail-user=%u@adelaide.edu.au
 
 # Modules needed
+modArch="arch/haswell"
 modSAMtools="SAMtools/1.9-foss-2016b"
 modHTSlib="HTSlib/1.9-foss-2016b"
 
 # Hard coded paths
-minimapProg="/data/neurogenetics/executables/minimap2-2.17_x64-linux/minimap2"
-genomeBuild="/data/neurogenetics/RefSeq/GATK/hg38/Homo_sapiens_assembly38.fasta"
+minimapProg="/hpcfs/groups/phoenix-hpc-neurogenetics/executables/minimap2-2.17_x64-linux/minimap2"
+genomeBuild="/hpcfs/groups/phoenix-hpc-neurogenetics/RefSeq/GCA_000001405.15_GRCh38_no_alt_plus_hs38d1_analysis_set.fna.gz"
+userDir="/hpcfs/users/${USER}"
 barcodes=false
 cores=8
 
@@ -36,12 +38,12 @@ echo "# Script for mapping Oxford Nanopore cDNA reads to the human genome.
 # Usage (with barcodes) sbatch --array 0-(n-1 barcodes) $0 -s /path/to/sequences -b -o /path/to/output -S SAMPLE -L LIBRARY -I ID] | [ - h | --help ]
 #
 # Options
-# -s	REQUIRED. Path to the folder containing the fastq_pass folder.  Your final_summary_xxx.txt must be in this folder.
+# -s	REQUIRED. Path to the folder containing the fastq_pass folder.  Your final_summary_xxx.txt must be in this folder. Don't include fastq_path in this name.
 # -b    DEPENDS.  If you used barcodes set the -b flag.  If you want meaningful sample ID add a file called barcodes.txt to the sequence folder with the 
 #                 tab delimited barcode and ID on each line.
 # -S	OPTIONAL. (with caveats). Sample name which will go into the BAM header. If not specified, then it will be fetched.
 #                 from the final_summary_xxx.txt file.
-# -o	OPTIONAL. Path to where you want to find your file output (if not specified an output directory $FASTDIR/ONT/cDNA/\$sampleName is used).
+# -o	OPTIONAL. Path to where you want to find your file output (if not specified an output directory $userDir/ONT/cDNA/\$sampleName is used).
 # -L	OPTIONAL. Identifier for the sequence library (to go into the @RG line, eg. MySeqProject20200202-PalindromicDatesRule).
 #                 Default \"SQK-DCS109_\$protocol_group_id\".
 # -I	OPTIONAL. Unique ID for the sequence (to go into the @RG line). If not specified the script will make one up.
@@ -50,6 +52,7 @@ echo "# Script for mapping Oxford Nanopore cDNA reads to the human genome.
 # Original: Written by Mark Corbett, 21/02/2020
 # Modified: (Date; Name; Description)
 # 23/07/2020; Mark; Added in barcode and array job option.
+# 21/01/2021; Mark; Update phoenix paths
 #
 "
 }
@@ -85,12 +88,12 @@ while [ "$1" != "" ]; do
 done
 if [ -z "$seqPath" ]; then # If path to sequences not specified then do not proceed
 	usage
-	echo "## ERROR: You need to specify the path to your fastq_pass folder"
+	echo "## ERROR: You need to specify the path to your fastq_pass folder. Don't include fastq_path in this name."
 	exit 1
 fi
 if [ ! -d "$seqPath/fastq_pass" ]; then # If the fastq_pass directory does not exist then do not proceed
     usage
-    echo "## ERROR: The fastq_pass directory needs to be in $seqPath"
+    echo "## ERROR: The fastq_pass directory needs to be in $seqPath. Don't include fastq_path in this name."
 	exit 1
 fi
 
@@ -119,8 +122,8 @@ if [ -z "${sampleName[$SLURM_ARRAY_TASK_ID]}" ]; then # If sample name not speci
 	fi
 fi
 if [ -z "$workDir" ]; then # If no output directory then use default directory
-	workDir=$FASTDIR/ONT/cDNA/${sampleName[$SLURM_ARRAY_TASK_ID]}
-	echo "## INFO: Using $FASTDIR/ONT/cDNA/${sampleName[$SLURM_ARRAY_TASK_ID]} as the output directory"
+	workDir=$userDir/ONT/cDNA/${sampleName[$SLURM_ARRAY_TASK_ID]}
+	echo "## INFO: Using $workDir as the output directory"
 fi
 if [ ! -d "$workDir" ]; then
 	mkdir -p $workDir
@@ -154,6 +157,7 @@ echo "## INFO: Using $ID for the sequence ID"
 cd $workDir
 
 ## Run the script ##
+modul load $modArch
 module load $modSAMtools
 module load $modHTSlib
 ${minimapProg} -ax splice \

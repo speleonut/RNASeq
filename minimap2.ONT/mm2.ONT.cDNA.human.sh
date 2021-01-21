@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH -J mm2ont-cDNA-wdl-sub
-#SBATCH -o /fast/users/%u/log/mm2ont-cDNA-wdl-sub-slurm-%j.out
+#SBATCH -o /hpcfs/users/%u/log/mm2ont-cDNA-wdl-sub-slurm-%j.out
 #SBATCH -A robinson
 #SBATCH -p batch
 #SBATCH -N 1
@@ -15,16 +15,18 @@
 #SBATCH --mail-user=%u@adelaide.edu.au
 
 # Modules needed
+modArch="arch/haswell"
 modJava="Java/9.0.4"
 modSAMtools="SAMtools/1.9-foss-2016b"
 modHTSlib="HTSlib/1.9-foss-2016b"
 
 # Hard coded paths
-cromwellPath="/data/neurogenetics/executables/cromwell"
-cromwellJar="cromwell-48.jar"
-minimapProg="/data/neurogenetics/executables/minimap2-2.17_x64-linux/minimap2"
-genomeBuild="/data/neurogenetics/RefSeq/GATK/hg38/Homo_sapiens_assembly38.fasta"
-scriptDir="/data/neurogenetics/git/PhoenixScripts/mark/RNASeq/minimap2ONT"
+cromwellPath="/hpcfs/groups/phoenix-hpc-neurogenetics/executables/cromwell"
+cromwellJar="cromwell-53.1.jar"
+minimapProg="/hpcfs/groups/phoenix-hpc-neurogenetics/executables/minimap2-2.17_x64-linux/minimap2"
+genomeBuild="/hpcfs/groups/phoenix-hpc-neurogenetics/RefSeq/GCA_000001405.15_GRCh38_no_alt_plus_hs38d1_analysis_set.fna.gz"
+scriptDir="/hpcfs/groups/phoenix-hpc-neurogenetics/git/mark/RNASeq/minimap2.ONT"
+userDir="/hpcfs/users/${USER}"
 
 usage()
 {
@@ -33,13 +35,13 @@ echo "# Script for mapping Oxford Nanopore cDNA reads to the human genome.
 # submitted via the flags below or default options provided.
 # REQUIREMENTS: As a minimum you need the fastq_pass folder and the final_summary_xxx.txt file from your nanopore run.
 #
-# Usage sbatch $0 -s /path/to/sequences -o /path/to/output -c /path/to/config.cfg -S SAMPLE -L LIBRARY -I readGroupID] | [ - h | --help ]
+# Usage sbatch $0 -s /path/to/sequences -o /path/to/output -S SAMPLE -L LIBRARY -I readGroupID] | [ - h | --help ]
 #
 # Options
-# -s	REQUIRED. Path to the folder containing the fastq_pass folder.  Your final_summary_xxx.txt must be in this folder.
+# -s	REQUIRED. Path to the folder containing the fastq_pass folder.  Your final_summary_xxx.txt must be in this folder. Don't include fastq_path in this name.
 # -S	OPTIONAL (with caveats). Sample name which will go into the BAM header. If not specified, then it will be fetched 
 #       from the final_summary_xxx.txt file.
-# -o	OPTIONAL. Path to where you want to find your file output (if not specified an output directory $FASTDIR/ONT/cDNA/\$sampleName is used)
+# -o	OPTIONAL. Path to where you want to find your file output (if not specified an output directory $userDir/ONT/cDNA/\$sampleName is used)
 # -L	OPTIONAL. Identifier for the sequence library (to go into the @RG line, eg. MySeqProject20200202-PalindromicDatesRule). 
 #                 Default \"SQK-DCS109_\$protocol_group_id\"
 # -I	OPTIONAL. Unique ID for the sequence (to go into the @RG line). If not specified the script will make one up.
@@ -47,6 +49,7 @@ echo "# Script for mapping Oxford Nanopore cDNA reads to the human genome.
 # 
 # Original: Written by Mark Corbett, 21/02/2020
 # Modified: (Date; Name; Description)
+# 21/01/2021; Mark; Update to new phoenix paths
 #
 "
 }
@@ -79,12 +82,12 @@ while [ "$1" != "" ]; do
 done
 if [ -z "$seqPath" ]; then # If path to sequences not specified then do not proceed
 	usage
-	echo "## ERROR: You need to specify the path to your fastq_pass folder"
+	echo "## ERROR: You need to specify the path to your fastq_pass folder. Don't include fastq_path in this name."
 	exit 1
 fi
 if [ ! -d "$seqPath/fastq_pass" ]; then # If the fastq_pass directory does not exist then do not proceed
     usage
-    echo "## ERROR: The fastq_pass directory needs to be in $seqPath"
+    echo "## ERROR: The fastq_pass directory needs to be in $seqPath. Don't include fastq_path in this name."
 	exit 1
 fi
 
@@ -102,8 +105,8 @@ if [ -z "$sampleName" ]; then # If sample name not specified then look for the f
 	fi
 fi
 if [ -z "$outputDir" ]; then # If no output directory then use default directory
-	outputDir=$FASTDIR/ONT/cDNA/$sampleName
-	echo "## INFO: Using $FASTDIR/ONT/cDNA/$sampleName as the output directory"
+	outputDir=$userDir/ONT/cDNA/$sampleName
+	echo "## INFO: Using $outputDir as the output directory"
 fi
 if [ ! -d "$outputDir" ]; then
 	mkdir -p $outputDir
@@ -153,6 +156,7 @@ echo "{
 " > $outputDir/$sampleName.inputs.json
 
 ## Submit the workflow to the queue ##
+module load $modArch
 module load $modJava
 java -Dconfig.file=$scriptDir/cromwell_slurm.conf \
 -jar $cromwellPath/$cromwellJar \
