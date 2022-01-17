@@ -128,7 +128,7 @@ fi
 # Run salmon
 $salmon_prog quant -l $libType \
 -i $genomeBuild \
--g $tx2gene
+-g $tx2gene \
 -1 ${read1[$SLURM_ARRAY_TASK_ID]} \
 -2 ${read2[$SLURM_ARRAY_TASK_ID]} \
 -p $threads \
