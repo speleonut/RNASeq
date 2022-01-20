@@ -17,7 +17,7 @@
 #Set some paths and modules
 stringtiePath=/hpcfs/groups/phoenix-hpc-neurogenetics/executables/stringtie_latest
 userDir=/hpcfs/users/${USER}
-modList=(arch/skylake, HTSlib/1.9, Python/3.7.0)
+modList=("arch/skylake", "HTSlib/1.9", "Python/3.7.0")
 
 usage()
 {
