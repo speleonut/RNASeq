@@ -19,7 +19,7 @@ HISAT2_INDEXES=/hpcfs/groups/phoenix-hpc-neurogenetics/RefSeq/HISAT2
 hisat2Path=/hpcfs/groups/phoenix-hpc-neurogenetics/executables/hisat2-2.2.1
 stringtiePath=/hpcfs/groups/phoenix-hpc-neurogenetics/executables/stringtie_latest
 userDir=/hpcfs/users/${USER}
-modList=("arch/skylake", "GCC/7.3.0", "HTSlib/1.9", "SAMtools/1.8", "Python/3.7.0")
+modList=("arch/skylake" "GCC/7.3.0" "HTSlib/1.9" "SAMtools/1.8" "Python/3.7.0")
 
 set_strand()
 {
