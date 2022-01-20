@@ -115,8 +115,17 @@ if [ ! -d "$outDir/logs" ]; then
 		mkdir -p $outDir/logs
 fi
 
-# Define list of sample ID for the array
+# Define list of sample ID for the array and create output
 sampleID=($(awk -F" " '{print $1}' $SeqFile))
+if [ -d "$outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}" ]; then
+    if [ -f "$outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.hisat2.bam" ]; then
+        mv $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]} $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}.old
+        mkdir -p $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}
+        mv $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}.old $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/
+        echo "#WARN: You are re-running the HISAT pipeline, the contents of $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]} have been moved to $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.old to avoid overwrite errors."
+else
+    mkdir -p $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}
+fi
 
 # Load modules
 for mod in "${modList[@]}"; do
