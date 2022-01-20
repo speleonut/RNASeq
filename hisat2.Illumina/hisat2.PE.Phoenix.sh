@@ -123,6 +123,7 @@ if [ -d "$outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}" ]; then
         mkdir -p $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}
         mv $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}.old $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/
         echo "#WARN: You are re-running the HISAT pipeline, the contents of $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]} have been moved to $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.old to avoid overwrite errors."
+    fi
 else
     mkdir -p $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}
 fi
