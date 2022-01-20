@@ -41,6 +41,7 @@ echo "# StringTieMerge.Phoenix.sh slurm submission script. Feed it a text file t
 # email: mark dot corbett is at adelaide.edu.au
 # Modified (Date; Name; Description):
 # 31/08/2020; Mark Corbett; Update for new file paths on Phoenix
+# 20/01/2022; Mark Corbett; Update annotation file type
 #
 " 
 }
@@ -108,6 +109,6 @@ if [ -z "$gtfList" ]; then #If a gtf file list text file is not supplied then tr
 fi
 
 # Run the script
-$stringtiePath/stringtie --merge -p8 -G $HISAT2_INDEXES/$refSeq/$refSeq.gff \
+$stringtiePath/stringtie --merge -p8 -G $HISAT2_INDEXES/$refSeq/$refSeq.gtf \
 -o $outDir/$gtfPrefix \
 $gtfList
