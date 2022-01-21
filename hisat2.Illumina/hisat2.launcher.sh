@@ -78,8 +78,10 @@ if [ ! -d "$outDir" ]; then
 fi
 echo "# INFO: Using $outDir as the working directory."
 
-if [ ! -d "$outDir/logs" ]; then
-		mkdir -p $outDir/logs
+# Ensure log directory exists
+if [ ! -d "$userDir/log" ]; then
+    mkdir -p $userDir/log
+    echo "# INFO: Your slurm .out files will be found in $userDir/log"
 fi
 
 # Set sample number for array jobs
