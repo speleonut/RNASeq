@@ -48,7 +48,7 @@ echo "# StringTie.final.Phoenix.sh slurm submission script. Generates read count
 while [ "$1" != "" ]; do
 	case $1 in
         -f )    shift
-                SeqFile=$1
+                seqFile=$1
 			    ;;
         -m )    shift
                 mergedGTF=$1
@@ -66,7 +66,7 @@ while [ "$1" != "" ]; do
 done
 
 # Check that your script has everything it needs to start.
-if [ -z "$SeqFile" ]; then #If sequence file list in a text file is not supplied then do not proceed
+if [ -z "$seqFile" ]; then #If sequence file list in a text file is not supplied then do not proceed
 	usage
 	echo "#ERROR: You need to specify the path and name of the sample file list"
 	exit 1
@@ -91,7 +91,7 @@ if [ -z "$mergedGTF" ]; then # If merged gtf not specified then try to find it
     fi
 fi
 # Define files for the array
-sampleID=($(awk -F" " '{print $1}' $SeqFile))
+sampleID=($(awk -F" " '{print $1}' $seqFile))
 
 # Run final round of StringTie
 $stringtiePath/stringtie $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.hisat2.bam \

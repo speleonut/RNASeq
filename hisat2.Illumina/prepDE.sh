@@ -45,7 +45,7 @@ echo "# hisat2.PE.Phoenix.sh slurm submission script for mapping stranded or uns
 while [ "$1" != "" ]; do
 	case $1 in
         -f )    shift
-                SeqFile=$1
+                seqFile=$1
 			    ;;
         -o )    shift
                 outDir=$1
@@ -60,7 +60,7 @@ while [ "$1" != "" ]; do
 done
 
 # Check that your script has everything it needs to start.
-if [ -z "$SeqFile" ]; then #If sequence file list in a text file is not supplied then do not proceed
+if [ -z "$seqFile" ]; then #If sequence file list in a text file is not supplied then do not proceed
     usage
     echo "# ERROR: You need to specify the path and name of the sequence file list
 # -f	REQUIRED. Path and file name of a text file with sequences listed in the form \"read-group-ID path/to/read_1-1,...,path/to/read_n-1 /path/to/read_1-2,...,/path/to/read_n-2\""
