@@ -117,8 +117,8 @@ fi
 
 # Define files for the array
 sampleID=($(awk -F" " '{print $1}' $SeqFile))
-read1=($(awk -F" " '{print $2}' $SeqFile | tr "," " "))
-read2=($(awk -F" " '{print $3}' $SeqFile | tr "," " "))
+read1=($(awk -F" " '{print $2}' $SeqFile))
+read2=($(awk -F" " '{print $3}' $SeqFile))
 
 
 if [ ! -d "$outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}" ]; then
@@ -129,8 +129,8 @@ fi
 $salmon_prog quant -l $libType \
 -i $genomeBuild \
 -g $tx2gene \
--1 ${read1[$SLURM_ARRAY_TASK_ID]} \
--2 ${read2[$SLURM_ARRAY_TASK_ID]} \
+-1 (echo ${read1[$SLURM_ARRAY_TASK_ID]} | tr "," " ") \
+-2 (echo ${read2[$SLURM_ARRAY_TASK_ID]} | tr "," " ") \
 -p $threads \
 -o $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]} \
 $otherFlags
