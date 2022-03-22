@@ -129,8 +129,8 @@ fi
 $salmon_prog quant -l $libType \
 -i $genomeBuild \
 -g $tx2gene \
--1 (echo ${read1[$SLURM_ARRAY_TASK_ID]} | tr "," " ") \
--2 (echo ${read2[$SLURM_ARRAY_TASK_ID]} | tr "," " ") \
+-1 $(echo ${read1[$SLURM_ARRAY_TASK_ID]} | tr "," " ") \
+-2 $(echo ${read2[$SLURM_ARRAY_TASK_ID]} | tr "," " ") \
 -p $threads \
 -o $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]} \
 $otherFlags
