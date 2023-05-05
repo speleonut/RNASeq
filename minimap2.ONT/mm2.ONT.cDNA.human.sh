@@ -15,6 +15,8 @@
 #SBATCH --mail-user=%u@adelaide.edu.au
 
 # Modules needed
+module purge
+module use /apps/modules/all
 modArch="arch/haswell"
 modJava="Java/9.0.4"
 modSAMtools="SAMtools/1.9-foss-2016b"

@@ -17,7 +17,7 @@
 HISAT2_INDEXES=/hpcfs/groups/phoenix-hpc-neurogenetics/RefSeq/HISAT2
 stringtiePath=/hpcfs/groups/phoenix-hpc-neurogenetics/executables/stringtie_latest
 userDir=/hpcfs/users/${USER}
-DefaultOutDir=${userDir}/BAM/RNASeq # You might change this depending on how you set up your \$FASTDIR
+DefaultOutDir=${userDir}/BAM/RNASeq # You might change this depending on how you set up your environment
 
 # StringTie.final.Phoenix.sh
 usage()

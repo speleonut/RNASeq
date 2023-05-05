@@ -15,6 +15,8 @@
 #SBATCH --mail-user=%u@adelaide.edu.au
 
 # Modules needed
+module purge
+module use /apps/modules/all
 modList=("arch/haswell" "SAMtools/1.9-foss-2016b" "HTSlib/1.9-foss-2016b")
 
 # Hard coded paths and variables
