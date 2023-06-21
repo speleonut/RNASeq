@@ -20,7 +20,7 @@ stringtiePath=/hpcfs/groups/phoenix-hpc-neurogenetics/executables/stringtie_late
 userDir=/hpcfs/users/${USER}
 module purge
 module use /apps/skl/modules/all
-modList=("arch/skylake" "GCC/7.3.0" "HTSlib/1.9" "SAMtools/1.8" "Python/3.7.0")
+modList=("HTSlib/1.17-GCC-11.2.0" "SAMtools/1.17-GCC-11.2.0" "Python/3.7.0")
 
 set_strand()
 {
