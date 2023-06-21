@@ -125,7 +125,6 @@ if [ ! -d "$outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}" ]; then
 fi
 
 # Run salmon
-$salmon_prog --version
 $salmon_prog quant -l $libType \
 -i $genomeBuild \
 -g $tx2gene \
