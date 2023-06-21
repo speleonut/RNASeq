@@ -18,7 +18,7 @@ stringtiePath=/hpcfs/groups/phoenix-hpc-neurogenetics/executables/stringtie_late
 userDir=/hpcfs/users/${USER}
 module purge
 module use /apps/skl/modules/all
-modList=("arch/skylake" "HTSlib/1.9" "Python/3.7.0")
+modList=("HTSlib/1.17-GCCcore-11.2.0" "Python/3.7.0")
 
 usage()
 {
