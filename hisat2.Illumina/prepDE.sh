@@ -1,7 +1,6 @@
 #!/bin/bash
 #SBATCH -J prepDE
 #SBATCH -o /hpcfs/users/%u/log/prepDE-slurm-%j.out
-#SBATCH -A robinson
 #SBATCH -p #SBATCH -p skylake,icelake,v100cpu               # partition (this is the queue your job will be added to) 
 #SBATCH -N 1               	                                # number of nodes
 #SBATCH -n 2              	                                # number of cores

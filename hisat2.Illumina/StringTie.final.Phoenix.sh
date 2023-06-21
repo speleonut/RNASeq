@@ -1,7 +1,6 @@
 #!/bin/bash
 #SBATCH -J st-final
 #SBATCH -o /hpcfs/users/%u/log/stringtie-final-slurm-%j.out
-#SBATCH -A robinson
 #SBATCH -p skylake,icelake,v100cpu                          # partition (this is the queue your job will be added to) 
 #SBATCH -N 1               	                                # number of nodes
 #SBATCH -n 8              	                                # number of cores

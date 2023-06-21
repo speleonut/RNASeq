@@ -1,7 +1,6 @@
 #!/bin/bash
 #SBATCH -J fishyQuant
 #SBATCH -o /hpcfs/users/%u/log/salmon_quant-slurm-%j.out
-#SBATCH -A robinson
 #SBATCH -p skylake,icelake,v100cpu                          # partition (this is the queue your job will be added to) 
 #SBATCH -N 1               	                                # number of nodes
 #SBATCH -n 12              	                                # number of cores
