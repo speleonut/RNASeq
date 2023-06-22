@@ -4,7 +4,7 @@
 #SBATCH -p skylake,icelake,skylakehm,v100cpu               # partition (this is the queue your job will be added to) 
 #SBATCH -N 1               	                                # number of nodes
 #SBATCH -n 2              	                                # number of cores
-#SBATCH --time=00:30:00    	                                # time allocation, which has the format (D-HH:MM)
+#SBATCH --time=01:30:00    	                                # time allocation, which has the format (D-HH:MM)
 #SBATCH --mem=8G         	                                # memory pool for all cores
 
 # Notification configuration 
@@ -85,5 +85,14 @@ paste <(cut -f1 $seqFile) <(find $outDir/*/*.forBallgown.gtf) > $outDir/gtfDE.li
 cd $outDir
 $stringtiePath/prepDE.py3 -i $outDir/gtfDE.list.txt -l 150
 
+# Tidy up and compress some files
 (grep ^"#" $outDir/mergedOutput.gtf; grep -v ^"#" $outDir/mergedOutput.gtf | sort -k1,1 -k4,4n) | bgzip > $outDir/mergedOutput.gtf.gz
 tabix $outDir/mergedOutput.gtf.gz
+
+find $outDir/*/*.gtf > $outDir/gtf.compress.list.txt
+while read gtf ; do
+    (grep ^"#" ${gtf}; grep -v ^"#" ${gtf} | sort -k1,1 -k4,4n) | bgzip > ${gtf}.gz
+    tabix ${gtf}.gz
+done < $outDir/gtf.compress.list.txt
+
+rm $outDir/gtf.compress.list.txt
