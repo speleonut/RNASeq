@@ -88,11 +88,20 @@ $stringtiePath/prepDE.py3 -i $outDir/gtfDE.list.txt -l 150
 # Tidy up and compress some files
 (grep ^"#" $outDir/mergedOutput.gtf; grep -v ^"#" $outDir/mergedOutput.gtf | sort -k1,1 -k4,4n) | bgzip > $outDir/mergedOutput.gtf.gz
 tabix $outDir/mergedOutput.gtf.gz
+if [ -f "$outDir/mergedOutput.gtf.gz.tbi" ]; then
+    rm $outDir/mergedOutput.gtf
+fi
 
 find $outDir/*/*.gtf > $outDir/gtf.compress.list.txt
 while read gtf ; do
     (grep ^"#" ${gtf}; grep -v ^"#" ${gtf} | sort -k1,1 -k4,4n) | bgzip > ${gtf}.gz
     tabix ${gtf}.gz
+done < $outDir/gtf.compress.list.txt
+
+while read gtf ; do
+    if [ -f "${gtf}.gz.tbi" ]; then
+       rm ${gtf}
+    fi
 done < $outDir/gtf.compress.list.txt
 
 rm $outDir/gtf.compress.list.txt
