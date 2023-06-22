@@ -83,7 +83,7 @@ done
 paste <(cut -f1 $seqFile) <(find $outDir/*/*.forBallgown.gtf) > $outDir/gtfDE.list.txt
 
 cd $outDir
-$stringtiePath/prepDE.py -i $outDir/gtfDE.list.txt -l 150
+$stringtiePath/prepDE.py3 -i $outDir/gtfDE.list.txt -l 150
 
 (grep ^"#" $outDir/mergedOutput.gtf; grep -v ^"#" $outDir/mergedOutput.gtf | sort -k1,1 -k4,4n) | bgzip > $outDir/mergedOutput.gtf.gz
 tabix $outDir/mergedOutput.gtf.gz
