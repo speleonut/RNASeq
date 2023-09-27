@@ -136,8 +136,8 @@ done
 
 # Run HISAT2
 ${hisat2Path}/hisat2 -x $HISAT2_INDEXES/$refSeq/$refSeq \
--1 $(grep ${sampleID[$SLURM_ARRAY_TASK_ID]} $SeqFile | awk -F" " '{print $2}') \
--2 $(grep ${sampleID[$SLURM_ARRAY_TASK_ID]} $SeqFile | awk -F" " '{print $3}') \
+-1 $(grep -w ${sampleID[$SLURM_ARRAY_TASK_ID]} $SeqFile | awk -F" " '{print $2}') \
+-2 $(grep -w ${sampleID[$SLURM_ARRAY_TASK_ID]} $SeqFile | awk -F" " '{print $3}') \
 --novel-splicesite-outfile $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.novel.ss.txt \
 --dta $hisat_string -p 8 \
 --new-summary \
