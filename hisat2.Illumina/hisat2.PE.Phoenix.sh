@@ -128,6 +128,7 @@ if [ -d "$outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}" ]; then
 else
     mkdir -p $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}
 fi
+echo "# INFO: The sample ID for this run was: ${sampleID[$SLURM_ARRAY_TASK_ID]}" # Helps with tracking failed runs in the .out file
 
 # Load modules
 for mod in "${modList[@]}"; do
