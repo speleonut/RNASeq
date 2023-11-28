@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -J fishyQuant
 #SBATCH -o /hpcfs/users/%u/log/salmon_quant-slurm-%j.out
-#SBATCH -p skylake,icelake,v100cpu                          # partition (this is the queue your job will be added to) 
+#SBATCH -p skylake,icelake,a100cpu
 #SBATCH -N 1               	                                # number of nodes
 #SBATCH -n 12              	                                # number of cores
 #SBATCH --time=02:00:00    	                                # time allocation, which has the format (D-HH:MM)

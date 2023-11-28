@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -J st-final
 #SBATCH -o /hpcfs/users/%u/log/stringtie-final-slurm-%j.out
-#SBATCH -p skylake,icelake,v100cpu                          # partition (this is the queue your job will be added to) 
+#SBATCH -p skylake,icelake,a100cpu
 #SBATCH -N 1               	                                # number of nodes
 #SBATCH -n 8              	                                # number of cores
 #SBATCH --time=06:00:00    	                                # time allocation, which has the format (D-HH:MM)

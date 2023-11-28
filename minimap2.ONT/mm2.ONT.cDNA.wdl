@@ -33,7 +33,7 @@ task mimimap2 {
         slurm_out: "/hpcfs/users/%u/log/mm2ont-cDNA-slurm-%j.out"
         nodes: "1"
         cores: "9"
-        queue: "#SBATCH -p skylake,icelake,v100cpu"
+        queue: "#SBATCH -p skylake,icelake,a100cpu"
         requested_memory_mb_per_core: "4"
         time: "05:00:00"
     }

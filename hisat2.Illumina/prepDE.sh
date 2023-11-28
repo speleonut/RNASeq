@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -J prepDE
 #SBATCH -o /hpcfs/users/%u/log/prepDE-slurm-%j.out
-#SBATCH -p skylake,icelake,skylakehm,v100cpu               # partition (this is the queue your job will be added to) 
+#SBATCH -p skylake,icelake,a100cpu
 #SBATCH -N 1               	                                # number of nodes
 #SBATCH -n 2              	                                # number of cores
 #SBATCH --time=01:30:00    	                                # time allocation, which has the format (D-HH:MM)
