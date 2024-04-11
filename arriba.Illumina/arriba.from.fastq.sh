@@ -122,6 +122,7 @@ SVfile=($(awk -F" " '{print $4}' $SeqFile))
 if [ ! -d "$outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}" ]; then
     mkdir -p $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}
 fi
+tmpDir="$outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}_STARtmp"
 
 if [ ! -z "${SVfile[SLURM_ARRAY_TASKID]}" ]; then
     SVparams="-d ${SVfile[SLURM_ARRAY_TASKID]}"
@@ -130,7 +131,7 @@ fi
 # Do the thing!
 $STAR_prog \
     --runThreadN $threads \
-    --genomeDir $STAR_index_dir/$buildID --genomeLoad NoSharedMemory \
+    --genomeDir $STAR_index_dir/$buildID --genomeLoad NoSharedMemory --outTmpDir $tmpDir\
     --readFilesIn ${read1[$SLURM_ARRAY_TASK_ID]} ${read2[$SLURM_ARRAY_TASK_ID]} --readFilesCommand zcat \
     --outStd BAM_Unsorted --outSAMtype BAM Unsorted --outSAMunmapped Within --outBAMcompression 0 \
     --outFilterMultimapNmax 50 --peOverlapNbasesMin 10 --alignSplicedMateMapLminOverLmate 0.5 --alignSJstitchMismatchNmax 5 -1 5 5 \
