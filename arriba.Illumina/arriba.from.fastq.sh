@@ -4,9 +4,9 @@
 #SBATCH -o /hpcfs/users/%u/log/Arriba-slurm-%j.out
 #SBATCH -p skylake,icelake,a100cpu
 #SBATCH -N 1               	                                # number of nodes
-#SBATCH -n 9              	                                # number of cores
+#SBATCH -n 10              	                                # number of cores
 #SBATCH --time=12:00:00    	                                # time allocation, which has the format (D-HH:MM)
-#SBATCH --mem=40G         	                                # memory pool for all cores
+#SBATCH --mem=128G         	                                # memory pool for all cores
 
 # Notification configuration 
 #SBATCH --mail-type=END					    # Type of email notifications will be sent (here set to END, which means an email will be sent when the job is done)
@@ -122,7 +122,12 @@ SVfile=($(awk -F" " '{print $4}' $SeqFile))
 if [ ! -d "$outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}" ]; then
     mkdir -p $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}
 fi
+
 tmpDir="$outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}_STARtmp"
+if [ -d "$tmpDir" ]; then
+    rm -r $tmpDir  # STAR likes to start with a clean tmp directory
+    echo "# WARN: A pre-existing STAR temporary directory $tmpDir was removed before starting this run.  This is usually occurs when a previous run failed."
+fi
 
 if [ ! -z "${SVfile[SLURM_ARRAY_TASKID]}" ]; then
     SVparams="-d ${SVfile[SLURM_ARRAY_TASKID]}"
@@ -136,11 +141,12 @@ $STAR_prog \
     --outStd BAM_Unsorted --outSAMtype BAM Unsorted --outSAMunmapped Within --outBAMcompression 0 \
     --outFilterMultimapNmax 50 --peOverlapNbasesMin 10 --alignSplicedMateMapLminOverLmate 0.5 --alignSJstitchMismatchNmax 5 -1 5 5 \
     --chimSegmentMin 10 --chimOutType WithinBAM HardClip --chimJunctionOverhangMin 10 --chimScoreDropMax 30 \
-    --chimScoreJunctionNonGTAG 0 --chimScoreSeparation 1 --chimSegmentReadGapMax 3 --chimMultimapNmax 50 |
+    --chimScoreJunctionNonGTAG 0 --chimScoreSeparation 1 --chimSegmentReadGapMax 3 --chimMultimapNmax 50 \
+    --outFileNamePrefix $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/ |
 $arriba_prog_dir/arriba \
     -x /dev/stdin \
     -o $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.$buildID.fusions.tsv \
     -O $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.$buildID.fusions.discarded.tsv \
-    -a $genomeBuild -g $GTF $SVparams\
+    -a $genomeBuild -g $GTF $SVparams \
     -b $blacklist -k $known_fusions -t $known_fusions -p $GFF
     
