@@ -26,9 +26,9 @@ threads=8 # Set one less than n above
 # Genome list (alter case statement below to add new options)
 set_genome_build() {
 case "${buildID}" in
-    hg38 | GRCh38 )    buildID="hg38"
-                       genomeBuild="$RefDir/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz"
-                       GTF="$annotation_dir/chess3.0.gtf.gz"
+    hg38 | GRCh38 )    buildID="GRCh38"  # Chromosomes are 1-22,X,Y with no chr prefix
+                       genomeBuild="$RefDir/Homo_sapiens.GRCh38.dna.primary_assembly.fa"
+                       GTF="$annotation_dir/Homo_sapiens.GRCh38.111.gtf.gz"
                        blacklist="$arriba_prog_dir/database/blacklist_hg38_GRCh38_v2.4.0.tsv.gz"
                        known_fusions="$arriba_prog_dir/database/known_fusions_hg38_GRCh38_v2.4.0.tsv.gz"
                        GFF="$arriba_prog_dir/database/protein_domains_hg38_GRCh38_v2.4.0.gff3"
@@ -40,7 +40,7 @@ case "${buildID}" in
                        known_fusions="$arriba_prog_dir/database/known_fusions_mm10_GRCm38_v2.4.0.tsv.gz"
                        GFF="$arriba_prog_dir/database/protein_domains_mm10_GRCm38_v2.4.0.gff3"
                        ;;
-    * )         echo "## ERROR: Genome build ${buildID} not recognized. Available options are hg38 or mm10."
+    * )         echo "## ERROR: Genome build ${buildID} not recognized. Available options are GRCh38 or mm10."
                 exit 1
                 ;;
 esac
@@ -59,7 +59,7 @@ echo "# arriba.from.fastq.sh a slurm submission script for identifying fusion tr
 # Options: 
 # -f	REQUIRED. Path and file name of a text file with sequences listed in the form \"read-group-ID path/to/read_1-1,...,path/to/read_n-1 /path/to/read_1-2,...,/path/to/read_n-2 /path/to/optional_SV_file\"
 #                 The optional SV file can be a VCF or a tab-delimited file as specified in the ARRIBA documents: https://arriba.readthedocs.io/en/latest/input-files/#structural-variant-calls-from-wgs
-# -g	OPTIONAL. Default hg38. Genome index for STAR and Arriba. Use either hg38 or mm10 or add a folder with the build ID to $STAR_index_dir folder and edit this script for new options.
+# -g	OPTIONAL. Default hg38. Genome index for STAR and Arriba. Use either GRCh38 or mm10 or add a folder with the build ID to $STAR_index_dir folder and edit this script for new options.
 # -o	OPTIONAL. Path to where you want to find your files, the default is $userDir/RNASeq/arriba/genomeBuild/. 
 #                 Each analyses will be put in a subfolder of this output directory using the sampleID if you use the default, or specifiy the directory yourself.
 # -h | --help     Prints the message you are reading.
