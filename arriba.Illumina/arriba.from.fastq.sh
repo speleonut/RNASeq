@@ -101,7 +101,7 @@ if [ -z "$SeqFile" ]; then #If sequence file list in a text file is not supplied
 	exit 1
 fi
 if [ -z "$buildID" ]; then
-    buildID="hg38"
+    buildID="GRCh38"
     echo "# WARN: The default genome build code $buildID was selected."
     set_genome_build
 else
