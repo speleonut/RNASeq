@@ -138,15 +138,15 @@ $STAR_prog \
     --runThreadN $threads \
     --genomeDir $STAR_index_dir/$buildID --genomeLoad NoSharedMemory --outTmpDir $tmpDir\
     --readFilesIn ${read1[$SLURM_ARRAY_TASK_ID]} ${read2[$SLURM_ARRAY_TASK_ID]} --readFilesCommand zcat \
-    --outStd BAM_Unsorted --outSAMtype BAM Unsorted --outSAMunmapped Within --outBAMcompression 0 \
+    --outSAMtype BAM Unsorted --outSAMunmapped Within --outBAMcompression 0 \
     --outFilterMultimapNmax 50 --peOverlapNbasesMin 10 --alignSplicedMateMapLminOverLmate 0.5 --alignSJstitchMismatchNmax 5 -1 5 5 \
     --chimSegmentMin 10 --chimOutType WithinBAM HardClip --chimJunctionOverhangMin 10 --chimScoreDropMax 30 \
     --chimScoreJunctionNonGTAG 0 --chimScoreSeparation 1 --chimSegmentReadGapMax 3 --chimMultimapNmax 50 \
-    --outFileNamePrefix $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/ |
+    --outFileNamePrefix $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/
+
 $arriba_prog_dir/arriba \
-    -x /dev/stdin \
+    -x $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/Aligned.out.bam \
     -o $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.$buildID.fusions.tsv \
     -O $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.$buildID.fusions.discarded.tsv \
     -a $genomeBuild -g $GTF $SVparams \
     -b $blacklist -k $known_fusions -t $known_fusions -p $GFF
-    
