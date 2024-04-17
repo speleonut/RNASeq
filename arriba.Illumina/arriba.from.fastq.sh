@@ -5,8 +5,8 @@
 #SBATCH -p skylake,icelake,a100cpu
 #SBATCH -N 1               	                                # number of nodes
 #SBATCH -n 10              	                                # number of cores
-#SBATCH --time=12:00:00    	                                # time allocation, which has the format (D-HH:MM)
-#SBATCH --mem=160G         	                                # memory pool for all cores
+#SBATCH --time=03:00:00    	                                # time allocation, which has the format (D-HH:MM)
+#SBATCH --mem=56G         	                                # memory pool for all cores
 
 # Notification configuration 
 #SBATCH --mail-type=END					    # Type of email notifications will be sent (here set to END, which means an email will be sent when the job is done)
@@ -150,3 +150,5 @@ $arriba_prog_dir/arriba \
     -O $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.$buildID.fusions.discarded.tsv \
     -a $genomeBuild -g $GTF $SVparams \
     -b $blacklist -k $known_fusions -t $known_fusions -p $GFF
+
+rm $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/Aligned.out.bam
