@@ -26,7 +26,7 @@ threads=8 # Set one less than n above
 # Genome list (alter case statement below to add new options)
 set_genome_build() {
 case "${buildID}" in
-    hg38 | GRCh38 )    buildID="GRCh38"  # Chromosomes are 1-22,X,Y with no chr prefix
+    hg38 | GRCh38 )    buildID="GRCh38"  # Chromosomes are 1-22,MT,X,Y with no chr prefix
                        genomeBuild="$RefDir/Homo_sapiens.GRCh38.dna.primary_assembly.fa"
                        GTF="$annotation_dir/Homo_sapiens.GRCh38.111.gtf.gz"
                        blacklist="$arriba_prog_dir/database/blacklist_hg38_GRCh38_v2.4.0.tsv.gz"
@@ -55,6 +55,8 @@ echo "# arriba.from.fastq.sh a slurm submission script for identifying fusion tr
 #                The SLURM log directory must exist ${userDir}/log or submission to SLURM will fail
 #
 # Usage: sbatch --array 0-(n Samples-1) $0 -f inputFile.txt [ -g GenomeBuild -o /path/to/outDir ] | $0 [-h | --help]
+# If you have a lot of jobs you can limit the number running at a time to e.g. 8 like this:
+# Usage: sbatch --array 0-(n Samples-1)%8 $0 -f inputFile.txt [ -g GenomeBuild -o /path/to/outDir ] | $0 [-h | --help]
 #
 # Options: 
 # -f	REQUIRED. Path and file name of a text file with sequences listed in the form \"read-group-ID path/to/read_1-1,...,path/to/read_n-1 /path/to/read_1-2,...,/path/to/read_n-2 /path/to/optional_SV_file\"
@@ -151,4 +153,7 @@ $arriba_prog_dir/arriba \
     -a $genomeBuild -g $GTF $SVparams \
     -b $blacklist -k $known_fusions -t $known_fusions -p $GFF
 
+# Do some tidying up to save space
 rm $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/Aligned.out.bam
+gzip $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/${sampleID[$SLURM_ARRAY_TASK_ID]}.$buildID.fusions.discarded.tsv
+gzip $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}/SJ.out.tab
