@@ -2,7 +2,7 @@
 
 #SBATCH -J mm2ont-cDNA-wdl-sub
 #SBATCH -o /hpcfs/users/%u/log/mm2ont-cDNA-wdl-sub-slurm-%j.out
-#SBATCH -p skylake,icelake,a100cpu
+#SBATCH -p icelake,a100cpu
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --time=05:05:00

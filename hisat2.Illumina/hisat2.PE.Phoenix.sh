@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -J hisat2-cDNA
 #SBATCH -o /hpcfs/users/%u/log/hisat2-slurm-%j.out
-#SBATCH -p skylake,icelake,a100cpu
+#SBATCH -p icelake,a100cpu
 #SBATCH -N 1               	                                # number of nodes
 #SBATCH -n 8              	                                # number of cores
 #SBATCH --time=12:00:00    	                                # time allocation, which has the format (D-HH:MM)

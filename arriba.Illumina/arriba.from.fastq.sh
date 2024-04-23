@@ -2,7 +2,7 @@
 
 #SBATCH -J HeyAmigo
 #SBATCH -o /hpcfs/users/%u/log/Arriba-slurm-%j.out
-#SBATCH -p skylake,icelake,a100cpu
+#SBATCH -p icelake,a100cpu
 #SBATCH -N 1               	                                # number of nodes
 #SBATCH -n 10              	                                # number of cores
 #SBATCH --time=03:00:00    	                                # time allocation, which has the format (D-HH:MM)
