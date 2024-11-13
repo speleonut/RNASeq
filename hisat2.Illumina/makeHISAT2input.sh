@@ -32,7 +32,7 @@ ls *.gz | cut -f1 -d"_" | sort | uniq > $currentDir/tmp.30r4kjfdbit9givids8o093j
 
 while read i; do
 	ls $seqPath | grep ^$i\_ > $i.files.txt
-	sed -i "s,^,$seqPath,g" $i.files.txt	
+	sed -i "s,^,${seqPath}\/,g" $i.files.txt
 	grep R1 $i.files.txt > R1.tmp.txt
 	grep R2 $i.files.txt > R2.tmp.txt
 	rm $i.files.txt

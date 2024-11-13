@@ -40,16 +40,17 @@ esac
 usage()
 {
 echo "# salmon.quant.sh slurm submission script for quantifying transcripts from stranded Illumina paired end RNA-seq reads. 
-# Before running as a batch script you need to know the number of samples you have.
+# Before running as a batch script you need to know the number of samples you have. You should also read the Salmon docs
+# https://combine-lab.github.io/salmon/
 #
-# Dependencies:  An input text file with sequences listed in the form \"read-group-ID path/to/read_1-1,...,path/to/read_n-1 /path/to/read_1-2,...,/path/to/read_n-2\"
+# Dependencies:  An input text file with sequences listed in the form \"read-group-ID path/to/read_1-1,...,path/to/read_n-1 /path/to/read_1-2,...,/path/to/read_n-2\". In the hisat2.Illumina directory of this repo there is the makeHISAT2Input.sh script that can help with this (sometimes).
 #
 # Usage: sbatch --array 0-(n Samples-1) $0 -f inputFile.txt -g GenomeBuild -l library-type -o /path/to/outDir -x \"other salmon flags\" | [-h | --help]
 #
 # Options: 
 # -f	REQUIRED. Path and file name of a text file with sequences listed in the form \"read-group-ID path/to/read_1-1,...,path/to/read_n-1 /path/to/read_1-2,...,/path/to/read_n-2\"
-# -g	REQUIRED. Genome index for salmon e.g. default is grch38_tran. Use either hg38 or mm10 or add to $salmon_index_dir folder and edit this script for new options.
-# -l    OPTIONAL (with caveats). The default is to select ISR which should be correct for most Illumina stranded library preparations. 
+# -g	REQUIRED. Genome index for salmon: Use either hg38 or mm10 or add to $salmon_index_dir folder and edit this script for new options.
+# -l    OPTIONAL (with caveats). The default is to select \"A\" which should guess your library type.  If you want to specify then standard Illumina is usually ISR and RNAseq from SAGC is likely ISF. 
 # -o	OPTIONAL. Path to where you want to find your files default is $userDir/RNASeq/salmon/genomeBuild
 # -x    OPTIONAL. Any other salmon program flags you want to set in quoted text (YMMV).
 # -h | --help	Prints the message you are reading.
@@ -58,6 +59,7 @@ echo "# salmon.quant.sh slurm submission script for quantifying transcripts from
 # Script created by: Mark Corbett on 17/01/2022
 # email: mark dot corbett is at adelaide.edu.au
 # Modified (Date; Name; Description):
+# For changes please refer to the git repository.
 #
 " 
 }
@@ -93,32 +95,32 @@ done
 if [ -z "$SeqFile" ]; then #If sequence file list in a text file is not supplied then do not proceed
 	usage
 	echo "# ERROR: You need to specify the path and name of the sequence file list
-    # -f	REQUIRED. Path and file name of a text file with sequences listed in the form \"sample-ID path/to/read_1-1,...,path/to/read_n-1 /path/to/read_1-2,...,/path/to/read_n-2\""
+    # -f	REQUIRED. Path and file name of a text file with sequences listed in the form \"sample-ID path/to/read_1-1,...,path/to/read_n-1 /path/to/read_1-2,...,/path/to/read_n-2\"
+    # In the hisat2.Illumina directory of this repo there is the makeHISAT2Input.sh script that can help with this (sometimes...)."
 	exit 1
 fi
 if [ -z "$buildID" ]; then
     usage
     echo "# ERROR: You need to select either hg38 or mm10 as the genome build."
-    echo "# -g	REQUIRED. Genome index for salmon e.g. default is grch38_tran. Use either hg38 or mm10 or add to $salmon_index_dir folder and edit this script for new options."
+    echo "# -g	REQUIRED. Genome index for salmon: Use either hg38 or mm10 or add to $salmon_index_dir folder and edit this script for new options."
     exit 1
 else
     set_genome_build
     echo "# INFO: using $buildID as the genome build code."
 fi
-if [ -z "$outDir" ]; then #If output directory not specified then run in current directory
+if [ -z "$outDir" ]; then #If output directory not specified then run in the default directory
     outDir=$userDir/RNASeq/salmon/$buildID
 	echo "# INFO: Using $outDir as the working directory"
 fi
-if [ -z "$libType" ]; then #If sequence file list in a text file is not supplied then do not proceed
-    libType="ISR"
-    echo "# WARN: Using the default library type ISR.  This is usually what you want for stranded Illumina RNA library preparations.  If you're not sure, map with HISAT2 and check strandedness using IGV."
+if [ -z "$libType" ]; then #If the library type is not supplied then use the automatic option
+    libType="A"
+    echo "# WARN: Using the default library type A.  This will attempt to automatically work out which type of library you have.  If you're not sure, map with HISAT2 and check strandedness using IGV."
 fi
 
 # Define files for the array
 sampleID=($(awk -F" " '{print $1}' $SeqFile))
 read1=($(awk -F" " '{print $2}' $SeqFile))
 read2=($(awk -F" " '{print $3}' $SeqFile))
-
 
 if [ ! -d "$outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}" ]; then
     mkdir -p $outDir/${sampleID[$SLURM_ARRAY_TASK_ID]}
