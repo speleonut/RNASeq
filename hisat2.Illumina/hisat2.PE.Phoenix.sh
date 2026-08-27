@@ -20,7 +20,7 @@ stringtiePath=/hpcfs/groups/phoenix-hpc-neurogenetics/executables/stringtie_late
 userDir=/hpcfs/users/${USER}
 module purge
 module use /apps/skl/modules/all
-modList=("Python/3.7.0" "HTSlib/1.17-GCC-11.2.0" "SAMtools/1.17-GCC-11.2.0")
+modList=("Python/3.7.0" "HTSlib/1.18-GCC-12.3.0" "SAMtools/1.22.1-GCC-14.3.0")
 
 set_strand()
 {
@@ -60,6 +60,7 @@ echo "# hisat2.PE.Phoenix.sh slurm submission script for mapping stranded or uns
 # Modified (Date; Name; Description):
 # 31/08/2020; Mark Corbett; Update for new file paths on Phoenix
 # 20/01/2022; Mark Corbett; Explicit setting of modules. Add in strandedness flag. Add in strandedness setting. Update annotation to gencode GTF. Deprecate hisat2.PE.stranded.Phoenix.sh
+# 18/8/2026; Ali Gardner; updated HTSlib & SAMtools modules versions from "HTSlib/1.17-GCC-11.2.0" "SAMtools/1.17-GCC-11.2.0" to "HTSlib/1.18-GCC-12.3.0" "SAMtools/1.22.1-GCC-14.3.0"
 #
 " 
 }
